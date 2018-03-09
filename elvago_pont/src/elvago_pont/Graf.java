@@ -17,12 +17,11 @@ public class Graf {
     public int elekSzama=0;
     public LinkedList<Integer> szomszedok[];
     int ido = 0;
-    static final int NIL = -1;
+    int gyoker = 1;
 
     public Graf() {
     }
     
-    // Constructor
     Graf(int v)
     {
         csomopontokSzama = v;
@@ -43,7 +42,7 @@ public class Graf {
     // latogatott[] --> meglatogatott pontok eltarolva
     // eleresiIdo[] --> mikor ertem el
     // szulo[] --> a DFS-ben a csomopontok szuleje
-    // elvagoPontok[] --> 
+    // elvagoPontok[] --> igaz/hamis (lehet h maga a csomopont szamat kellene inkabb eltarolni!?)
     void elvagoPontok(int u, boolean latogatott[], int eleresiIdo[],
                 int low[], int szulo[], boolean elvagoPontok[])
     {
@@ -58,22 +57,19 @@ public class Graf {
             {
                 gyerek++;
                 szulo[v] = u;
+                
                 elvagoPontok(v, latogatott, eleresiIdo, low, szulo, elvagoPontok);
-                low[u]  = Math.min(low[u], low[v]); //a legkisebb szomszed
-                                                    //megnezem hogyha v-bol van-e visszamutato el u oseihez
-                // u is an articulation point in following cases
- 
-                // (1) u is root of DFS tree and has two or more chilren.
-                if (szulo[u] == NIL && gyerek > 1)
+                //a legkisebb szomszed - megnezem hogyha v-bol van-e visszamutato el u oseihez
+                low[u]  = Math.min(low[u], low[v]);
+               // System.out.println("Low[u]: " + low[u]+"\n"+"Szulo[u]"+szulo[u]+"\n");
+                //u elvago pont, ha:
+                //u a gyoker a dfs-ben es van legalabb 1 gyereke
+                if (szulo[u] == gyoker && gyerek > 1)
                     elvagoPontok[u] = true;
-                    //hsbdfaihbsifahsif
-                // (2) If u is not root and low value of one of its child
-                // is more than eleresiIdoovery value of u.
-                if (szulo[u] != NIL && low[v] >= eleresiIdo[u])
+                //u nem a gyoker es valamlyik alacsonyabb szintu gyereket hamarabb elertuk mint az u-t
+                if (szulo[u] != gyoker && low[v] >= eleresiIdo[u])
                     elvagoPontok[u] = true;
             }
- 
-            // Update low value of u for szulo function calls.
             else if (v != szulo[u])
                 low[u]  = Math.min(low[u], eleresiIdo[v]);
         }
@@ -89,25 +85,23 @@ public class Graf {
         int szulo[] = new int[csomopontokSzama];
         boolean elvagoPontok[] = new boolean[csomopontokSzama]; // To store articulation points
  
-        // Initialize szulo and latogatott, and elvagoPontok(articulation point)
-        // arrays
-        for (int i = 0; i < csomopontokSzama; i++)
-        {
-            szulo[i] = 0;
-            latogatott[i] = false;
-            elvagoPontok[i] = false;
+        // tombok inicializalasa
+        for (int i = 0; i < csomopontokSzama; i++){
+            szulo[i] = 0; //kezdetben minden szulo nulla
+            latogatott[i] = false; //kezdetben egyik sincs meglatogatva
+            elvagoPontok[i] = false; //kezetben egyik sem elvago pont
+        }
+        for (int i = 0; i < csomopontokSzama; i++){
+            if (latogatott[i] == false){
+                elvagoPontok(i, latogatott, eleresiIdo, low, szulo, elvagoPontok);
+            }
         }
  
-        // Call the recursive helper function to find articulation
-        // points in DFS tree rooted with vertex 'i'
-        for (int i = 0; i < csomopontokSzama; i++)
-            if (latogatott[i] == false)
-                elvagoPontok(i, latogatott, eleresiIdo, low, szulo, elvagoPontok);
- 
-        // Now elvagoPontok[] contains articulation points, print them
-        for (int i = 0; i < csomopontokSzama; i++)
-            if (elvagoPontok[i] == true)
-                
+        //elvagoPontok[] kiiratasa
+        for (int i = 0; i < csomopontokSzama; i++){
+            if (elvagoPontok[i] == true){
                 System.out.print(i+" ");
+            }
+        }
     }
 }
