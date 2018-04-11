@@ -26,7 +26,7 @@ public class Elvago_pont {
         // TODO code application logic here
         Graf graf = new Graf();
         graf.beolvasAll(graf, "terroristak.txt");
-        graf.kiirGraf(graf);         
+       // graf.kiirGraf(graf);         
         System.out.print("Elvago pontok: ");
         graf.DFS();
         System.out.print("\n");
@@ -37,6 +37,12 @@ public class Elvago_pont {
        // graf.kiirGraf(ujgraf);
         //System.out.print("Elvago pontok a masodik korben: ");
         //graf.DFS();  
+        
+       /* Graf graf2 = new Graf();
+        graf2.beolvasAll(graf2, "elso_korben.txt");
+        System.out.print("Elvago pontok: ");
+        graf2.DFS();
+        System.out.print("\n");*/
     }   
 }
 

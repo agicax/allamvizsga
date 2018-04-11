@@ -2,26 +2,19 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
- */
+55555 */
 package elvago_pont;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
-import static java.util.Collections.list;
 import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import static java.util.Locale.filter;
-import java.util.Objects;
 import java.util.Scanner;
-import javafx.util.Pair;
-
 /**
  *
  * @author Agnes
@@ -184,8 +177,7 @@ public class Graf {
                     }
                 }           
             }
-        }      
-        
+        }             
         //onallo komponensek megszamolasa, akiknek nem maradt egy szomszedjuk sem
          int db=0; //onallo komonensek szama
         for(int i=1; i<this.csomopontokSzama; ++i){
@@ -195,9 +187,9 @@ public class Graf {
                 }
             }
         }
-        System.out.println("Onallo komponensek szama: "+ db +"\n");
+        System.out.println("Onallo komponensek szama: "+ db);
         ujgraf.setCsomopontokSzama(this.csomopontokSzama-this.EP.size()-db-1);
-        System.out.println("Ujgraf csomopontok szama: "+ ujgraf.csomopontokSzama + ", elek szama: "+ujgraf.elekSzama);
+        //System.out.println("Csomopontok szama: "+ ujgraf.csomopontokSzama + "\n"+ "elek szama: "+ujgraf.elekSzama);
         return ujgraf;   
     }
     
@@ -231,7 +223,7 @@ public class Graf {
         kiir.write(ujgraf.csomopontokSzama+" "+ujgraf.elekSzama+"\r\n");       
         
         
-      //  int count=0;
+      //  int count=0; //ez csak ellenorzes, kiiratas
         for(int i=1; i<regigraf.csomopontokSzama; ++i){
             if( (!regigraf.EP.contains(i)) && (regigraf.szomszedok[i].size()>0) ){ //ha a pont nem ElvagoPont es a szomszedok merete>0
                                                                                     //mert ahol nulla az azt jelent hogy leszakadt a grafrol!
@@ -247,17 +239,29 @@ public class Graf {
             }
         }
         
-       // System.out.println(count);
+        List<Integer> seged = new ArrayList<>();
+        // efektiv allomanyba iras!
+        //eloszor megnezem hogy miket kell kiirjak, ezt beteszem a seged tombbe
+        //aztan vegigmegyek a tombon s ugy vegzem a kiirast
+        for(int i=1; i<regigraf.csomopontokSzama; ++i){       
+            // i-vel megyek a csomopontokon
+            if(!regigraf.EP.contains(i) && (regigraf.szomszedok[i].size()>0)){  //ha(nem elvago pont && van szomszedja)
+                //kiir.write(i+" ");
+                for(int j=0; j<regigraf.szomszedok[i].size(); ++j){  
+                    //j-vel megyek a szomszedokon
+                    
+                        kiir.write(i+" "+regigraf.szomszedok[i].get(j)+"\r\n");
+                        seged.add(i); 
+                       // System.out.println("seged.add(i) = "+ i);                   
+                        seged.add(regigraf.szomszedok[i].get(j));    
+                       // System.out.println("regigraf.szomszedok[i].get(j) = "+regigraf.szomszedok[i].get(j));
+                    
+                    
+                }
+            }            
+        }
         
-        /*ez innen jo*/
-        /*for(int i=1; i<regigraf.csomopontokSzama; ++i){
-            
-            if(!regigraf.EP.contains(i)){
-                kiir.write(i+" ");
-            }
-            kiir.write("\r\n");
-        }*/
-        /*idaig, de nem eleg*/
+        
         
         kiir.close();
     }
